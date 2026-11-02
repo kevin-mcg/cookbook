@@ -1,0 +1,23 @@
+# render.yaml - Définition de l'infrastructure Cloud CookBook
+services:
+  # 1. Configuration du serveur Web Applicatif Rails
+  - type: web
+    name: eg2-app
+    runtime: ruby
+    # Script exécuté par Render pour assembler l'application
+    buildCommand: "./bin/render-build.sh"
+    # Commande pour démarrer le serveur de production Puma
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eg2-db
+          property: connectionString
+
+# 2. Configuration de la base de données PostgreSQL managée
+databases:
+  - name: eg2-db
+    databaseName: eg2_production
+    user: eg2_user
